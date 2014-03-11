@@ -2181,6 +2181,17 @@ class SelectSqlGenerationTest extends \Doctrine\Tests\OrmTestCase
             'SELECT COUNT(c0_.name) AS sclr0 FROM cms_users c0_ HAVING sclr0 IS NULL'
         );
     }
+
+    /**
+     * @group DDC-3022
+     */
+    public function testSupportsArbitraryJoinWithSingleSelection()
+    {
+        $this->assertSqlGeneration(
+            'SELECT u FROM Doctrine\Tests\Models\CMS\CmsUser u JOIN Doctrine\Tests\Models\CMS\CmsEmail e WITH u.username = e.email',
+            'SELECT c0_.id AS id0, c0_.status AS status1, c0_.username AS username2, c0_.name AS name3 FROM cms_users c0_ INNER JOIN cms_emails c1_ ON (c0_.username = c1_.email)'
+        );
+    }
 }
 
 class MyAbsFunction extends \Doctrine\ORM\Query\AST\Functions\FunctionNode
